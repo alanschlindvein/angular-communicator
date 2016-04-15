@@ -1,0 +1,29 @@
+{
+    "name": "angular-messenger",
+    "homepage": "https://github.com/alanschlindvein/angular-messenger",
+    "authors": [
+        "alanschlindvein <alansaraujo.schlindvein@gmail.com>"
+    ],
+    "description": "An Angular module that gives you a way to share messages among modules",
+    "main": "./dist/angular-messenger.js",
+    "keywords": [
+        "AngularJS",
+        "Angular",
+        "Messenger"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "src",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests",
+        "Gruntfile.js"
+    ],
+    "dependencies": {
+        "angular": "^1.x"
+    },
+    "devDependencies": {
+        "angular-mocks": "^1.x"
+    }
+}
