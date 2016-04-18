@@ -2,6 +2,10 @@ angular-messenger
 =====================
 An Angular module that gives you a way to share messages among modules.
 
+[![NPM version][npm-image]][npm-url]
+[![License][license-image]][license-url]
+[![Downloads][downloads-image]][downloads-url]
+
 ##Table of contents:
 - [API Documentation](#api-documentation)
  - [on](#on)
@@ -16,7 +20,7 @@ Adds an event and applies a callback to it.
 ```js
 myApp.controller('MainCtrl', function($scope, angularMessengerService) {
   //...
-  angularMessengerService.on('update', function() {
+  angularMessengerService.on('update', function(obj) {
      //...
   });
   //...
@@ -52,3 +56,10 @@ myApp.controller('MainCtrl', function($scope, angularMessengerService) {
   //...
 });
 ```
+
+[npm-image]: https://img.shields.io/npm/v/angular-messenger.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/angular-messenger
+[license-image]: http://img.shields.io/npm/l/angular-messenger.svg?style=flat-square
+[license-url]: LICENSE
+[downloads-image]: http://img.shields.io/npm/dm/angular-messenger.svg?style=flat-square
+[downloads-url]: https://npmjs.org/package/angular-messenger

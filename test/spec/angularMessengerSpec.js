@@ -17,7 +17,7 @@ describe('Angular Messenger', function() {
 		angularMessengerService.on('foo', function(counter) {
 			expect(counter).toBe(0);
 		});
-		angularMessengerService.exec('foo', 0, 1);
+		angularMessengerService.exec('foo', 0);
 	}));
 
 	it('should be able to call multiples function to same namespace', inject(function(angularMessengerService) {
