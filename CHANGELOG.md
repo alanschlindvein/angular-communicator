@@ -16,3 +16,9 @@
 #### Changes
 
 * **Package name:** Change package name to communicator.
+
+<a name="0.2.1"></a>
+# 0.1.1 Hades (2016-05-18)
+#### Changes
+
+* **Package name for bower:** Fix package name in bower file.
