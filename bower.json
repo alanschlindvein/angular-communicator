@@ -1,11 +1,12 @@
 {
-    "name": "angular-messenger",
-    "homepage": "https://github.com/alanschlindvein/angular-messenger",
+    "name": "al/angular-communicator",
+    "version": "0.2.0",
+    "homepage": "https://github.com/alanschlindvein/angular-communicator",
     "authors": [
         "alanschlindvein <alansaraujo.schlindvein@gmail.com>"
     ],
     "description": "An Angular module that gives you a way to share messages among modules",
-    "main": "./dist/angular-messenger.js",
+    "main": "./dist/angular-communicator.js",
     "keywords": [
         "AngularJS",
         "Angular",

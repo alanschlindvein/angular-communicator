@@ -1,15 +1,15 @@
 {
-    "name": "angular-messenger",
-    "version": "0.1.0",
+    "name": "angular-communicator",
+    "version": "0.2.0",
     "description": "An Angular module that gives you a way to share messages among modules",
-    "homepage": "https://github.com/alanschlindvein/angular-messenger",
+    "homepage": "https://github.com/alanschlindvein/angular-communicator",
     "main": "./index.js",
     "scripts": {
         "test": "grunt test"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/alanschlindvein/angular-messenger.git"
+        "url": "https://github.com/alanschlindvein/angular-communicator.git"
     },
     "keywords": [
         "AngularJS",
@@ -19,7 +19,7 @@
     "author": "alanschlindvein <alansaraujo.schlindvein@gmail.com>",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/alanschlindvein/angular-messenger/issues"
+        "url": "https://github.com/alanschlindvein/angular-communicator/issues"
     },
     "devDependencies": {
         "grunt": "~0.4.2",

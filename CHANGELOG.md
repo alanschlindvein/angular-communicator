@@ -10,3 +10,9 @@
 
 * **README:** Added version, license and downloads info to README.
 * **Test:** Removed typos.
+
+<a name="0.2.0"></a>
+# 0.1.1 Hades (2016-05-18)
+#### Changes
+
+* **Package name:** Change package name to communicator.

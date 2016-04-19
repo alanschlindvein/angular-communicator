@@ -1,10 +1,6 @@
-angular-messenger
+angular-communicator
 =====================
 An Angular module that gives you a way to share messages among modules.
-
-[![NPM version][npm-image]][npm-url]
-[![License][license-image]][license-url]
-[![Downloads][downloads-image]][downloads-url]
 
 ##Table of contents:
 - [API Documentation](#api-documentation)
@@ -18,9 +14,9 @@ An Angular module that gives you a way to share messages among modules.
 Adds an event and applies a callback to it.  
 **on(name, func[args]):**
 ```js
-myApp.controller('MainCtrl', function($scope, angularMessengerService) {
+myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularMessengerService.on('update', function(obj) {
+  angularCommunicatorService.on('update', function(obj) {
      //...
   });
   //...
@@ -30,36 +26,29 @@ myApp.controller('MainCtrl', function($scope, angularMessengerService) {
 Dispatches an event **name** notifying the registered listeners.  
 **exec(name, [args]):**
 ```js
-myApp.controller('MainCtrl', function($scope, angularMessengerService) {
+myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularMessengerService.exec('update', {update: true});
+  angularCommunicatorService.exec('update', {update: true});
   //...
 });
 ```
 ###remove
-Removes an event from messenger.
+Removes an event from communicator.
 **remove(name):**
 ```js
-myApp.controller('MainCtrl', function($scope, angularMessengerService) {
+myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularMessengerService.remove('update');
+  angularCommunicatorService.remove('update');
   //...
 });
 ```
 ##clearAll
-Removes all events from messenger.
+Removes all events from communicator.
 **clearAll():**
 ```js
-myApp.controller('MainCtrl', function($scope, angularMessengerService) {
+myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularMessengerService.clearAll();
+  angularCommunicatorService.clearAll();
   //...
 });
 ```
-
-[npm-image]: https://img.shields.io/npm/v/angular-messenger.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/angular-messenger
-[license-image]: http://img.shields.io/npm/l/angular-messenger.svg?style=flat-square
-[license-url]: LICENSE
-[downloads-image]: http://img.shields.io/npm/dm/angular-messenger.svg?style=flat-square
-[downloads-url]: https://npmjs.org/package/angular-messenger

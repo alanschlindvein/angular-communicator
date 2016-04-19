@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 				footer: '})(window, window.angular);'
 			},
 			dist: {
-				src: ['src/angular-messenger.js'],
+				src: ['src/angular-communicator.js'],
 				dest: '<%= dirs.dest %>/<%= pkg.name %>.js'
 			}
 		},
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
 				options: { node: true }
 			},
 			dev: {
-				src: ['angular-messenger.js'],
+				src: ['angular-communicator.js'],
 				options: {}
 			},
 			test: {

@@ -1,2 +1,2 @@
-require('./src/angular-messenger.js');
-module.exports = 'AngularMessenger';
+require('./src/angular-communicator.js');
+module.exports = 'AngularCommunicator';

@@ -13,7 +13,7 @@ module.exports = function(config) {
 		files: [
 			bower + 'angular/angular.js',
 			bower + 'angular-mocks/angular-mocks.js',
-			'dist/angular-messenger.js',
+			'dist/angular-communicator.js',
 			'test/spec/**/*.js'
 		],
 		frameworks: ['jasmine'],
