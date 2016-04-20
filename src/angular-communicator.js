@@ -7,9 +7,7 @@ angular
 		this.$get = ['$rootScope', function($rootScope) {
 
 			var registerCallback = function(namespace, callback) {
-				if(!registeredCallbacks[namespace]) {
-					registeredCallbacks[namespace] = [];
-				}
+				if(!registeredCallbacks[namespace]) { registeredCallbacks[namespace] = []; }
 				registeredCallbacks[namespace].push(callback);
 			};
 
@@ -18,9 +16,7 @@ angular
 			};
 
 			var execCallback = function(namespace, params) {
-				if(!registeredCallbacks[namespace]) {
-					return;
-				}
+				if(!registeredCallbacks[namespace]) { return; }
 				for(var i=0; i < registeredCallbacks[namespace].length; i++) {
 					registeredCallbacks[namespace][i](params);
 				}

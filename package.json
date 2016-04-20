@@ -1,6 +1,6 @@
 {
     "name": "angular-communicator",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "An Angular module that gives you a way to share messages among modules",
     "homepage": "https://github.com/alanschlindvein/angular-communicator",
     "main": "./index.js",
@@ -14,7 +14,8 @@
     "keywords": [
         "AngularJS",
         "communication",
-        "storage"
+        "events",
+        "messages"
     ],
     "author": "alanschlindvein <alansaraujo.schlindvein@gmail.com>",
     "license": "MIT",

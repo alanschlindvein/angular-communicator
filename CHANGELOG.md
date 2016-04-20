@@ -12,13 +12,20 @@
 * **Test:** Removed typos.
 
 <a name="0.2.0"></a>
-# 0.1.1 Hades (2016-05-18)
+# 0.2.0 Hades (2016-05-18)
 #### Changes
 
 * **Package name:** Change package name to communicator.
 
 <a name="0.2.1"></a>
-# 0.1.1 Hades (2016-05-18)
+# 0.2.1 Eunostus (2016-05-18)
 #### Changes
 
 * **Package name for bower:** Fix package name in bower file.
+
+<a name="0.2.2"></a>
+# 0.2.2 Oeneus (2016-05-20)
+#### Changes
+
+* **README:** Added images info from npm.
+* **PLANNING:** Added a project planning.

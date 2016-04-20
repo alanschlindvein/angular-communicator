@@ -2,6 +2,10 @@ angular-communicator
 =====================
 An Angular module that gives you a way to share messages among modules.
 
+[![NPM version][npm-image]][npm-url]
+[![License][license-image]][license-url]
+[![Downloads][downloads-image]][downloads-url]
+
 ##Table of contents:
 - [API Documentation](#api-documentation)
  - [on](#on)
@@ -52,3 +56,10 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
+[npm-image]: https://img.shields.io/npm/v/angular-communicator.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/angular-communicator
+[license-image]: http://img.shields.io/npm/l/angular-communicator.svg?style=flat-square
+[license-url]: LICENSE
+[downloads-image]: http://img.shields.io/npm/dm/angular-communicator.svg?style=flat-square
+[downloads-url]: https://npmjs.org/package/angular-communicator
