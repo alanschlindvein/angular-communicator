@@ -1,37 +1,37 @@
 <a name="0.1.0"></a>
-# 0.1.0 Aphrodite (2016-05-06)
+# 0.1.0 Aphrodite (2016-04-06)
 #### What's done
 
 * **Functions to register and call an event.**
 
 <a name="0.1.1"></a>
-# 0.1.1 Eleusis (2016-05-18)
+# 0.1.1 Eleusis (2016-04-18)
 #### Changes
 
 * **README:** Added version, license and downloads info to README.
 * **Test:** Removed typos.
 
 <a name="0.2.0"></a>
-# 0.2.0 Hades (2016-05-18)
+# 0.2.0 Hades (2016-04-18)
 #### Changes
 
 * **Package name:** Change package name to communicator.
 
 <a name="0.2.1"></a>
-# 0.2.1 Eunostus (2016-05-18)
+# 0.2.1 Eunostus (2016-04-18)
 #### Changes
 
 * **Package name for bower:** Fix package name in bower file.
 
 <a name="0.2.2"></a>
-# 0.2.2 Oeneus (2016-05-20)
+# 0.2.2 Oeneus (2016-04-20)
 #### Changes
 
 * **README:** Added images info from npm.
 * **PLANNING:** Added a project planning.
 
 <a name="0.3.0"></a>
-# 0.3.0 Hera (2016-05-22)
+# 0.3.0 Hera (2016-04-22)
 #### Changes
 
 * **un-registering:** 'On' returns a function to un-register the callback for $destroy events.
