@@ -35,3 +35,9 @@
 #### Changes
 
 * **un-registering:** 'On' returns a function to un-register the callback for $destroy events.
+
+<a name="0.3.1"></a>
+# 0.3.1 Orithyia (2016-04-22)
+#### Bug fixes
+
+* **Dates:** Changelog dates.
