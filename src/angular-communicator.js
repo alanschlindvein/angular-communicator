@@ -18,7 +18,7 @@ angular
 			};
 
 			var removeFromCallback = function(namespace) {
-				delete registeredCallbacks[namespace]
+				delete registeredCallbacks[namespace];
 			};
 
 			var execCallback = function(namespace, params) {

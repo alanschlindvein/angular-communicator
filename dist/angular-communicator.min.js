@@ -1,6 +1,6 @@
 /**
  * An Angular module that gives you a way to share messages among modules
- * @version v0.2.2 - 2016-04-22
+ * @version v0.3.0 - 2016-04-22
  * @link https://github.com/alanschlindvein/angular-communicator
  * @author alanschlindvein <alansaraujo.schlindvein@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
