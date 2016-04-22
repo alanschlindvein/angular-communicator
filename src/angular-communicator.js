@@ -4,11 +4,17 @@ angular
 
 		var registeredCallbacks = {};
 
-		this.$get = ['$rootScope', function($rootScope) {
+		this.$get = ['$rootScope', '$exceptionHandler', function($rootScope, $exceptionHandler) {
 
 			var registerCallback = function(namespace, callback) {
-				if(!registeredCallbacks[namespace]) { registeredCallbacks[namespace] = []; }
+				if(!registeredCallbacks[namespace]) {
+					registeredCallbacks[namespace] = [];
+				}
 				registeredCallbacks[namespace].push(callback);
+				return function() {
+					var indexOfCallback = registeredCallbacks[namespace].indexOf(callback);
+					(indexOfCallback !== -1) && (registeredCallbacks[namespace][indexOfCallback] = null);
+				};
 			};
 
 			var removeFromCallback = function(namespace) {
@@ -18,7 +24,16 @@ angular
 			var execCallback = function(namespace, params) {
 				if(!registeredCallbacks[namespace]) { return; }
 				for(var i=0; i < registeredCallbacks[namespace].length; i++) {
-					registeredCallbacks[namespace][i](params);
+					if(!registeredCallbacks[namespace][i]) {
+						registeredCallbacks[namespace].splice(i, 1);
+						i--;
+						continue;
+					}
+					try {
+						registeredCallbacks[namespace][i](params);
+					} catch(e) {
+						$exceptionHandler(e);
+					}
 				}
 			};
 

@@ -14,28 +14,34 @@ describe('Angular Communicator', function() {
 	});
 
 	it('should be able pass parameter to through methods', inject(function(angularCommunicatorService) {
-    angularCommunicatorService.on('foo', function(counter) {
-			expect(counter).toBe(0);
-		});
-    angularCommunicatorService.exec('foo', 0);
+	    angularCommunicatorService.on('foo', function(counter) {
+		    expect(counter).toBe(0);
+	    });
+	    angularCommunicatorService.exec('foo', 0);
 	}));
 
 	it('should be able to call multiples function to same namespace', inject(function(angularCommunicatorService) {
-    angularCommunicatorService.on('foo', function(param) {
+	    angularCommunicatorService.on('foo', function(param) {
 			expect(param.toFoo).toBe(1);
-		});
-    angularCommunicatorService.on('foo', function(param) {
-			expect(param.toBar).toBe(2);
-		});
+		    expect(param.toBar).toBe(2);
+	    });
 
-    angularCommunicatorService.exec('foo', {toFoo: 1, toBar: 2});
+	    angularCommunicatorService.exec('foo', {toFoo: 1, toBar: 2});
+	}));
+
+	it('should un-register callback', inject(function(angularCommunicatorService) {
+		var cleanUp = angularCommunicatorService.on('fooForSpy', fooForSpy.print);
+		cleanUp();
+		angularCommunicatorService.exec('fooForSpy');
+
+		expect(fooForSpy.print).not.toHaveBeenCalled();
+
 	}));
 
 	it('should remove one namespace', inject(function(angularCommunicatorService) {
-    angularCommunicatorService.on('fooForSpy', fooForSpy.print);
-
-    angularCommunicatorService.remove('fooForSpy');
-    angularCommunicatorService.exec('fooForSpy');
+	    angularCommunicatorService.on('fooForSpy', fooForSpy.print);
+	    angularCommunicatorService.remove('fooForSpy');
+	    angularCommunicatorService.exec('fooForSpy');
 
 		expect(fooForSpy.print).not.toHaveBeenCalled();
 	}));

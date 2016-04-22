@@ -1,6 +1,6 @@
 /**
  * An Angular module that gives you a way to share messages among modules
- * @version v0.1.1 - 2016-04-18
+ * @version v0.2.2 - 2016-04-22
  * @link https://github.com/alanschlindvein/angular-communicator
  * @author alanschlindvein <alansaraujo.schlindvein@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -12,13 +12,17 @@ angular
 
 		var registeredCallbacks = {};
 
-		this.$get = ['$rootScope', function($rootScope) {
+		this.$get = ['$rootScope', '$exceptionHandler', function($rootScope, $exceptionHandler) {
 
 			var registerCallback = function(namespace, callback) {
 				if(!registeredCallbacks[namespace]) {
 					registeredCallbacks[namespace] = [];
 				}
 				registeredCallbacks[namespace].push(callback);
+				return function() {
+					var indexOfCallback = registeredCallbacks[namespace].indexOf(callback);
+					(indexOfCallback !== -1) && (registeredCallbacks[namespace][indexOfCallback] = null);
+				};
 			};
 
 			var removeFromCallback = function(namespace) {
@@ -26,11 +30,18 @@ angular
 			};
 
 			var execCallback = function(namespace, params) {
-				if(!registeredCallbacks[namespace]) {
-					return;
-				}
+				if(!registeredCallbacks[namespace]) { return; }
 				for(var i=0; i < registeredCallbacks[namespace].length; i++) {
-					registeredCallbacks[namespace][i](params);
+					if(!registeredCallbacks[namespace][i]) {
+						registeredCallbacks[namespace].splice(i, 1);
+						i--;
+						continue;
+					}
+					try {
+						registeredCallbacks[namespace][i](params);
+					} catch(e) {
+						$exceptionHandler(e);
+					}
 				}
 			};
 
@@ -45,5 +56,4 @@ angular
 				clearAll: clearAllBacks
 			};
 		}];
-	});
-})(window, window.angular);
+	});})(window, window.angular);

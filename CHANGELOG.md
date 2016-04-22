@@ -29,3 +29,9 @@
 
 * **README:** Added images info from npm.
 * **PLANNING:** Added a project planning.
+
+<a name="0.3.0"></a>
+# 0.3.0 Hera (2016-05-22)
+#### Changes
+
+* **un-registering:** 'On' returns a function to un-register the callback for $destroy events.
