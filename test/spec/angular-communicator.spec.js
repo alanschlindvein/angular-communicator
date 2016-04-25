@@ -11,10 +11,14 @@ describe('Angular Communicator', function() {
 			},
 			save: function() {
 				console.log('save');
+			},
+			update: function() {
+				console.log('update');
 			}
 		};
 		spyOn(fooForSpy, 'print').and.callThrough();
 		spyOn(fooForSpy, 'save').and.callThrough();
+		spyOn(fooForSpy, 'update').and.callThrough();
 	});
 
 	it('should be able to pass parameters to methods', inject(function(angularCommunicatorService) {
@@ -22,6 +26,22 @@ describe('Angular Communicator', function() {
 			expect(counter).toBe(0);
 		});
 		angularCommunicatorService.exec('foo', 0);
+	}));
+
+	it('should be able to call methods without passing parameters', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo', fooForSpy.print);
+		angularCommunicatorService.exec('foo');
+
+		expect(fooForSpy.print).toHaveBeenCalled();
+	}));
+
+	it('should not call methods without a name', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo', fooForSpy.print);
+		angularCommunicatorService.exec();
+		angularCommunicatorService.exec('');
+		angularCommunicatorService.exec(0);
+
+		expect(fooForSpy.print).not.toHaveBeenCalled();
 	}));
 
 	it('should call multiples functions to same message', inject(function(angularCommunicatorService) {
@@ -33,6 +53,49 @@ describe('Angular Communicator', function() {
 		});
 		angularCommunicatorService.exec('foo', 0);
 	}));
+
+	it('should call multiples functions', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo:bar', function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.on('foo:foo', function(counter) {
+			expect(counter).toBe(1);
+		});
+		angularCommunicatorService.execGroup(['foo:bar', 'foo:foo'], [0, 1]);
+	}));
+
+	it('should call multiples functions using same parameter', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo:bar', function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.on('foo:foo', function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.execGroup(['foo:bar', 'foo:foo'], [0]);
+	}));
+
+	it('should not call multiples functions using same parameter', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo:print', fooForSpy.print);
+		angularCommunicatorService.on('foo:save', fooForSpy.save);
+
+		angularCommunicatorService.execGroup('foo:print', [0]);
+		angularCommunicatorService.execGroup('foo:save', 'save');
+
+		expect(fooForSpy.print).not.toHaveBeenCalled();
+		expect(fooForSpy.save).not.toHaveBeenCalled();
+	}));
+
+	/*it('should not call multiples functions using wrong length of parameters', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo:print', fooForSpy.print);
+		angularCommunicatorService.on('foo:save', fooForSpy.save);
+		angularCommunicatorService.on('foo:update', fooForSpy.update);
+
+		angularCommunicatorService.execGroup(['foo:print', 'foo:save', 'foo:update'], [0, 2]);
+
+		expect(fooForSpy.print).not.toHaveBeenCalled();
+		expect(fooForSpy.save).not.toHaveBeenCalled();
+		expect(fooForSpy.update).not.toHaveBeenCalled();
+	}));*/
 
 	it('should un-register listeners', inject(function(angularCommunicatorService) {
 		var cleanUp = angularCommunicatorService.on('foo:fo', fooForSpy.print);

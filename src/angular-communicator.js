@@ -57,23 +57,38 @@ angular
 			return Object.keys(obj).length === 0 && JSON.stringify(obj) === JSON.stringify({});
 		}
 
-		this.$get = ['$rootScope', '$exceptionHandler', function($rootScope, $exceptionHandler) {
+		function canNotProceed(name) {
+			return isEmptyObject(registeredListeners) || !name || typeof name !== 'string';
+		}
+
+		this.$get = ['$exceptionHandler', function($exceptionHandler) {
 
 			var registerHierarchicalListener = function(name, listener) {
+				if(!name || typeof name !== 'string') { return; }
 				buildHierarchicalStructure(registeredListeners, name.split(':'), listener);
 				return function() {
 					unRegisterListener(registeredListeners, name.split(':'));
 				}
 			};
 
-			var removeFromRegisterListeners = function(name) {
-				if(isEmptyObject(registeredListeners)) { return; }
+			var removeRegisteredListener = function(name) {
+				if(canNotProceed(name)) { return; }
 				unRegisterListener(registeredListeners, name.split(':'))
 			};
 
-			var execListener = function(name, params) {
-				if(isEmptyObject(registeredListeners)) { return; }
+			var execListeners = function(name, params) {
+				if(canNotProceed(name)) { return; }
 				findNodeListenersToExecute(registeredListeners, name.split(':'), params, $exceptionHandler);
+			};
+
+			var execGroupListeners = function(names, params) {
+				if(isEmptyObject(registeredListeners)) { return; }
+				if(!Array.isArray(names) || !Array.isArray(params)) { return; }
+				if(params.length > 1 && params.length !== names.length) { return; }
+				if(Array.isArray(names) && names.some(function(name) { return typeof name !== 'string'; })) { return; }
+				for(var i=0; i < names.length; i++) {
+					findNodeListenersToExecute(registeredListeners, names[i].split(':'), params[i] || params[0], $exceptionHandler);
+				}
 			};
 
 			var clearAllListeners = function() {
@@ -82,8 +97,9 @@ angular
 
 			return {
 				on: registerHierarchicalListener,
-				remove: removeFromRegisterListeners,
-				exec: execListener,
+				remove: removeRegisteredListener,
+				exec: execListeners,
+				execGroup: execGroupListeners,
 				clearAll: clearAllListeners
 			};
 		}];
