@@ -85,7 +85,7 @@ describe('Angular Communicator', function() {
 		expect(fooForSpy.save).not.toHaveBeenCalled();
 	}));
 
-	/*it('should not call multiples functions using wrong length of parameters', inject(function(angularCommunicatorService) {
+	it('should not call multiples functions using wrong length of parameters', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo:print', fooForSpy.print);
 		angularCommunicatorService.on('foo:save', fooForSpy.save);
 		angularCommunicatorService.on('foo:update', fooForSpy.update);
@@ -95,7 +95,7 @@ describe('Angular Communicator', function() {
 		expect(fooForSpy.print).not.toHaveBeenCalled();
 		expect(fooForSpy.save).not.toHaveBeenCalled();
 		expect(fooForSpy.update).not.toHaveBeenCalled();
-	}));*/
+	}));
 
 	it('should un-register listeners', inject(function(angularCommunicatorService) {
 		var cleanUp = angularCommunicatorService.on('foo:fo', fooForSpy.print);
