@@ -88,12 +88,12 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
 });
 ```
 You can execute the listeners of a level just telling the parent level name.
-###execGroup
+###execQueue
 Execute multiples listeners at once.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularCommunicatorService.exec(['update', 'save', 'bar:save'], [{update: true}]);
+  angularCommunicatorService.execQueue(['update', 'save', 'bar:save'], [{update: true}]);
   //...
 });
 ```
@@ -101,7 +101,7 @@ Pass a parameter to each listener. But listeners name array and args array must 
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularCommunicatorService.exec(['update', 'save', 'bar:save'], [{update: true}, {update: false}, {name: 'bar.save'}]);
+  angularCommunicatorService.execQueue(['update', 'save', 'bar:save'], [{update: true}, {update: false}, {name: 'bar.save'}]);
   //...
 });
 ```

@@ -61,7 +61,7 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.on('foo:foo', function(counter) {
 			expect(counter).toBe(1);
 		});
-		angularCommunicatorService.execGroup(['foo:bar', 'foo:foo'], [0, 1]);
+		angularCommunicatorService.execQueue(['foo:bar', 'foo:foo'], [0, 1]);
 	}));
 
 	it('should call multiples functions using same parameter', inject(function(angularCommunicatorService) {
@@ -71,30 +71,32 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.on('foo:foo', function(counter) {
 			expect(counter).toBe(0);
 		});
-		angularCommunicatorService.execGroup(['foo:bar', 'foo:foo'], [0]);
+		angularCommunicatorService.execQueue(['foo:bar', 'foo:foo'], [0]);
 	}));
 
 	it('should not call multiples functions using same parameter', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo:print', fooForSpy.print);
 		angularCommunicatorService.on('foo:save', fooForSpy.save);
 
-		angularCommunicatorService.execGroup('foo:print', [0]);
-		angularCommunicatorService.execGroup('foo:save', 'save');
+		angularCommunicatorService.execQueue('foo:print', [0]);
+		angularCommunicatorService.execQueue('foo:save', 'save');
 
 		expect(fooForSpy.print).not.toHaveBeenCalled();
 		expect(fooForSpy.save).not.toHaveBeenCalled();
 	}));
 
-	it('should not call multiples functions using wrong length of parameters', inject(function(angularCommunicatorService) {
-		angularCommunicatorService.on('foo:print', fooForSpy.print);
-		angularCommunicatorService.on('foo:save', fooForSpy.save);
-		angularCommunicatorService.on('foo:update', fooForSpy.update);
+	it('should call multiples functions using wrong length of parameters', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo:print', function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.on('foo:save', function(counter) {
+			expect(counter).toBe(2);
+		});
+		angularCommunicatorService.on('foo:update', function(counter) {
+			expect(counter).toBe(0);
+		});
 
-		angularCommunicatorService.execGroup(['foo:print', 'foo:save', 'foo:update'], [0, 2]);
-
-		expect(fooForSpy.print).not.toHaveBeenCalled();
-		expect(fooForSpy.save).not.toHaveBeenCalled();
-		expect(fooForSpy.update).not.toHaveBeenCalled();
+		angularCommunicatorService.execQueue(['foo:print', 'foo:save', 'foo:update'], [0, 2]);
 	}));
 
 	it('should un-register listeners', inject(function(angularCommunicatorService) {

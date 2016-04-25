@@ -92,7 +92,6 @@ angular
 			var execGroupListeners = function(names, params) {
 				if(isEmptyObject(registeredListeners)) { return; }
 				if(!Array.isArray(names) || !Array.isArray(params)) { return; }
-				if(params.length > 1 && params.length !== names.length) { return; }
 				if(Array.isArray(names) && names.some(function(name) { return typeof name !== 'string'; })) { return; }
 				for(var i=0; i < names.length; i++) {
 					findNodeListenersToExecute(registeredListeners, names[i].split(':'), params[i] || params[0], $exceptionHandler);
@@ -107,7 +106,7 @@ angular
 				on: registerHierarchicalListener,
 				remove: removeRegisteredListener,
 				exec: execListeners,
-				execGroup: execGroupListeners,
+				execQueue: execGroupListeners,
 				clearAll: clearAllListeners
 			};
 		}];
