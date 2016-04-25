@@ -17,7 +17,7 @@ describe('Angular Communicator', function() {
 		spyOn(fooForSpy, 'save').and.callThrough();
 	});
 
-	it('should be able to pass parameters through methods', inject(function(angularCommunicatorService) {
+	it('should be able to pass parameters to methods', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo', function(counter) {
 			expect(counter).toBe(0);
 		});
@@ -34,7 +34,7 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.exec('foo', 0);
 	}));
 
-	it('should un-register callbacks', inject(function(angularCommunicatorService) {
+	it('should un-register listeners', inject(function(angularCommunicatorService) {
 		var cleanUp = angularCommunicatorService.on('foo:fo', fooForSpy.print);
 		cleanUp();
 
@@ -48,7 +48,7 @@ describe('Angular Communicator', function() {
 		expect(fooForSpy.print).not.toHaveBeenCalled();
 	}));
 
-	it('should be able to call multiples functions through hierarchical nodes', inject(function(angularCommunicatorService) {
+	it('should execute top-down callbacks', inject(function(angularCommunicatorService) {
 
 		angularCommunicatorService.on('foo', function(param) {
 			expect(param.toFoo).toBe(1);
@@ -58,11 +58,15 @@ describe('Angular Communicator', function() {
 			expect(param.toFoo).toBe(1);
 			expect(param.toBar).toBe(2);
 		});
+		angularCommunicatorService.on('foo:fo:ba', function(param) {
+			expect(param.toFoo).toBe(1);
+			expect(param.toBar).toBe(2);
+		});
 
 		angularCommunicatorService.exec('foo', {toFoo: 1, toBar: 2});
 	}));
 
-	it('should call only last level of hierarchy', inject(function(angularCommunicatorService) {
+	it('should call a specific level of the hierarchy', inject(function(angularCommunicatorService) {
 
 		angularCommunicatorService.on('foo', function(param) {
 			fooForSpy.print();
@@ -81,7 +85,7 @@ describe('Angular Communicator', function() {
 		expect(fooForSpy.save).not.toHaveBeenCalled();
 	}));
 
-	it('should remove one namespace', inject(function(angularCommunicatorService) {
+	it('should remove a specific listener', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo:print', fooForSpy.print);
 		angularCommunicatorService.on('foo:save', fooForSpy.save);
 
