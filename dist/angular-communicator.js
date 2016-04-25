@@ -74,7 +74,7 @@ angular
 				}
 			};
 
-			var removeFromRegisterListeners = function(name) {
+			var removeRegisteredListener = function(name) {
 				if(isEmptyObject(registeredListeners)) { return; }
 				unRegisterListener(registeredListeners, name.split(':'))
 			};
@@ -90,7 +90,7 @@ angular
 
 			return {
 				on: registerHierarchicalListener,
-				remove: removeFromRegisterListeners,
+				remove: removeRegisteredListener,
 				exec: execListener,
 				clearAll: clearAllListeners
 			};
