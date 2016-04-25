@@ -1,6 +1,6 @@
 /**
  * An Angular module that gives you a way to share messages among modules
- * @version v0.3.0 - 2016-04-22
+ * @version v0.4.0 - 2016-04-25
  * @link https://github.com/alanschlindvein/angular-communicator
  * @author alanschlindvein <alansaraujo.schlindvein@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -27,7 +27,7 @@ angular
 
 		function unRegisterListener(reg, splitName) {
 			if(splitName.length === 1) {
-				reg[splitName[0]] = { listeners: null };
+				reg[splitName[0]] = { listeners: [] };
 				return;
 			}
 			var registered = reg[splitName[0]];
@@ -35,26 +35,20 @@ angular
 			unRegisterListener(registered, splitName);
 		}
 
-		function findNodeListeners(reg, splitName, params, $exceptionHandler) {
+		function findNodeListenersToExecute(reg, splitName, params, $exceptionHandler) {
 			if(splitName.length === 1) {
 				execNodeListeners(reg[splitName[0]], params, $exceptionHandler);
 				return;
 			}
 			var registered = reg[splitName[0]];
 			splitName.splice(0, 1);
-			findNodeListeners(registered, splitName, params);
+			findNodeListenersToExecute(registered, splitName, params);
 		}
 
 		function execNodeListeners(reg, params, $exceptionHandler) {
 			for(var i=0; i < reg.listeners.length; i++) {
-				if(!reg.listeners[i]) {
-					reg.listeners.splice(i, 1);
-					i--;
-					continue;
-				}
 				try {
 					reg.listeners[i](params);
-					return;
 				} catch(e) {
 					$exceptionHandler(e);
 				}
@@ -67,6 +61,10 @@ angular
 			}
 		}
 
+		function isEmptyObject(obj) {
+			return Object.keys(obj).length === 0 && JSON.stringify(obj) === JSON.stringify({});
+		}
+
 		this.$get = ['$rootScope', '$exceptionHandler', function($rootScope, $exceptionHandler) {
 
 			var registerHierarchicalListener = function(name, listener) {
@@ -77,11 +75,13 @@ angular
 			};
 
 			var removeFromRegisterListeners = function(name) {
-				unRegisterListener(registeredListeners, name)
+				if(isEmptyObject(registeredListeners)) { return; }
+				unRegisterListener(registeredListeners, name.split(':'))
 			};
 
 			var execListener = function(name, params) {
-				findNodeListeners(registeredListeners, name.split(':'), params, $exceptionHandler);
+				if(isEmptyObject(registeredListeners)) { return; }
+				findNodeListenersToExecute(registeredListeners, name.split(':'), params, $exceptionHandler);
 			};
 
 			var clearAllListeners = function() {
