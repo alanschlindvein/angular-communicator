@@ -6,19 +6,57 @@ An Angular module that gives you a way to share messages among modules.
 [![License][license-image]][license-url]
 [![Downloads][downloads-image]][downloads-url]
 
-You can define the listeners as a tree and execute them as you wish, nice and easy.
+Just as you would do with $on, $emit and $broadcast using [AngularJS](https://docs.angularjs.org/api/ng/type/$rootScope.Scope), you can easily register your listeners and execute them with this simple service. Angular Communicator brings you an awesome feature that allows you define your listeners as a tree and execute them as you wish, nice and easy.
 
-##Table of contents:
+## Table of contents:
+- [Get Sarted](#getstarted)
 - [API Documentation](#api-documentation)
  - [on](#on)
  - [exec](#exec)
- - [execGroup](#execgroup)
+ - [execQueue](#execqueue)
  - [remove](#remove)
  - [clearAll](#clearall)
 
-##API Documentation
-##on
-Register a listener and define a callback to it.  
+## Get Sarted
+**(1)** You can install angular-communicator using 3 different ways:<br/>
+**Git:**
+clone & build [this](https://github.com/alanschlindvein/angular-communicator.git) repository<br/>
+**Bower:**
+```bash
+$ bower install angular-communicator --save
+```
+**npm:**
+```bash
+$ npm install angular-communicator
+```
+**(2)** Include `angular-communicator.js` (or `angular-communicator.min.js`) from the [dist](https://github.com/alanschlindvein/angular-communicator/tree/master/dist) directory in your `index.html`, after including Angular itself.
+
+**(3)** Add `'AngularCommunicator'` to your main module's list of dependencies.
+
+When you're done, your setup should look similar to the following:
+
+```html
+<!doctype html>
+<html ng-app="myApp">
+<head>
+
+</head>
+<body>
+    ...
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="bower_components/js/angular-communicator.min.js"></script>
+    ...
+    <script>
+        var myApp = angular.module('myApp', ['AngularCommunicator']);
+
+    </script>
+    ...
+</body>
+</html>
+```
+## API Documentation
+## on
+Register a listener with its callback function.  
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -28,7 +66,7 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-Add ':' to name to specify a hierarchy.
+Add ':' to specify the hierarchy.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -49,7 +87,7 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  var cleanUp = angularCommunicatorService.on('update',function(obj) {
+  var cleanUp = angularCommunicatorService.on('update', function(obj) {
      //...
   });
   //...
@@ -57,8 +95,8 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-###exec
-Execute all listeners.
+### exec
+Execute all registered listeners.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -66,15 +104,7 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-If you have a tree, you can execute just whatever you want to.
-```js
-myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
-  //...
-  angularCommunicatorService.exec('foo:update', {update: true});
-  //...
-});
-```
-**Execute only the level you want to.**
+You can execute the listeners of a level just telling the parent level name.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -87,9 +117,8 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-You can execute the listeners of a level just telling the parent level name.
-###execQueue
-Execute multiples listeners at once.
+### execQueue
+Execute multiple listeners at once.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -97,7 +126,7 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-Pass a parameter to each listener. But listeners name array and args array must have the same size.
+To pass an argument to each listener with an array of arguments.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -105,8 +134,25 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-###remove
-Removes an event from communicator.
+By default the first argument is passed to the listener whether it doesn't have an correspondent argument.
+```js
+myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
+  angularCommunicatorService.on('update', function(obj) {
+     //obj -> {update: true}
+  });
+  angularCommunicatorService.on('save', function(obj) {
+     //obj -> {save: false}
+  });
+  angularCommunicatorService.on('bar:save', function(obj) {
+     //obj -> {update: true}
+  });
+  //...
+  angularCommunicatorService.execQueue(['update', 'save', 'bar:save'], [{update: true}, {save: false}]);
+  //...
+});
+```
+### remove
+Remove an listener from communicator.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -114,8 +160,8 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-##clearAll
-Removes all events from communicator.
+### clearAll
+Remove all listeners from communicator.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...

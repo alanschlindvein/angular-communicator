@@ -14,6 +14,4 @@
 
 # Coming soon
 
-## Hierarchical events
-
-### Will be possible to register hierarchical events. With this feature a fired parent event executes its children too.
+## Unify exec and execQueue
