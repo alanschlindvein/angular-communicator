@@ -51,3 +51,9 @@
 #### Bug fixes
 
 * **Validation:** Validating api function parameters.
+
+<a name="0.4.1"></a>
+# 0.4.1 Diomedes (2016-04-27)
+#### Refactoring
+
+* **README:** Changed some typos.

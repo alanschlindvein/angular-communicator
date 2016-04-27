@@ -43,7 +43,7 @@ When you're done, your setup should look similar to the following:
 </head>
 <body>
     ...
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="bower_components/js/angular-communicator.min.js"></script>
     ...
     <script>
@@ -66,7 +66,7 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-Add ':' to specify the hierarchy.
+You can build a tree of listeners adding ':' to specify the hierarchy.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -126,7 +126,7 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-To pass an argument to each listener with an array of arguments.
+Pass an argument to each listener with an array of arguments.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
