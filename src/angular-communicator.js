@@ -57,36 +57,49 @@ angular
 			return Object.keys(obj).length === 0 && JSON.stringify(obj) === JSON.stringify({});
 		}
 
-		function canNotProceed(name) {
-			return isEmptyObject(registeredListeners) || !name || typeof name !== 'string';
+		function getKey(key) {
+			if(typeof key === 'function') {
+				return key();
+			}
+			return key;
+		}
+
+		function isInvalidKey(key) {
+			return (!key || ['function', 'string'].indexOf(typeof key) === -1);
 		}
 
 		this.$get = ['$exceptionHandler', function($exceptionHandler) {
 
-			var registerHierarchicalListener = function(name, listener) {
-				if(!name || typeof name !== 'string') { return; }
+			var registerHierarchicalListener = function(key, listener) {
+				if(arguments.length < 2) { return; }
+				if(isInvalidKey(key)) { return; }
+				var name = getKey(key);
 				buildHierarchicalStructure(registeredListeners, name.split(':'), listener);
 				return function() {
 					unRegisterListener(registeredListeners, name.split(':'));
 				}
 			};
 
-			var removeRegisteredListener = function(name) {
-				if(canNotProceed(name)) { return; }
+			var removeRegisteredListener = function(key) {
+				if(isInvalidKey(key)) { return; }
+				var name = getKey(key);
+				if(isEmptyObject(registeredListeners)) { return; }
 				unRegisterListener(registeredListeners, name.split(':'))
 			};
 
-			var execListeners = function(name, params) {
-				if(canNotProceed(name)) { return; }
+			var execListeners = function(key, params) {
+				if(isInvalidKey(key)) { return; }
+				var name = getKey(key);
+				if(isEmptyObject(registeredListeners)) { return; }
 				findNodeListenersToExecute(registeredListeners, name.split(':'), params, $exceptionHandler);
 			};
 
-			var execGroupListeners = function(names, params) {
+			var execGroupListeners = function(keys, params) {
 				if(isEmptyObject(registeredListeners)) { return; }
-				if(!Array.isArray(names) || !Array.isArray(params)) { return; }
-				if(Array.isArray(names) && names.some(function(name) { return typeof name !== 'string'; })) { return; }
-				for(var i=0; i < names.length; i++) {
-					findNodeListenersToExecute(registeredListeners, names[i].split(':'), params[i] || params[0], $exceptionHandler);
+				if(!Array.isArray(keys) || !Array.isArray(params)) { return; }
+				if(Array.isArray(keys) && keys.some(function(key) { return typeof key !== 'string'; })) { return; }
+				for(var i=0; i < keys.length; i++) {
+					findNodeListenersToExecute(registeredListeners, keys[i].split(':'), params[i] || params[0], $exceptionHandler);
 				}
 			};
 
