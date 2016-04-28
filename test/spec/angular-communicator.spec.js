@@ -28,6 +28,22 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.exec('foo', 0);
 	}));
 
+	it('should be able to register a function as key', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on(function() {
+			return 'foo';
+		}, function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.exec('foo', 0);
+	}));
+
+	it('should be able to pass arguments to methods', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo', function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.exec('foo', 0);
+	}));
+
 	it('should be able to call methods without passing arguments', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo', fooForSpy.print);
 		angularCommunicatorService.exec('foo');
