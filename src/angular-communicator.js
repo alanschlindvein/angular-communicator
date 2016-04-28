@@ -5,9 +5,7 @@ angular
 		var registeredListeners = {};
 
 		function buildHierarchicalStructure(reg, splitName, callback) {
-			if(!reg[splitName[0]]) {
-				reg[splitName[0]] = { listeners: [] };
-			}
+			(!reg[splitName[0]]) && (reg[splitName[0]] = { listeners: [] });
 			if(splitName.length === 1) {
 				reg[splitName[0]].listeners.push(callback);
 				return;
@@ -58,21 +56,24 @@ angular
 		}
 
 		function getKey(key) {
-			if(typeof key === 'function') {
-				return key();
-			}
-			return key;
+			return typeof key === 'function' ? key() : key;
 		}
 
 		function isInvalidKey(key) {
 			return (!key || ['function', 'string'].indexOf(typeof key) === -1);
 		}
 
+		function areNotAllStrings(keys) {
+			return keys.some(function(key) {
+				return typeof key !== 'string';
+			});
+		}
+
 		this.$get = ['$exceptionHandler', function($exceptionHandler) {
 
 			var registerHierarchicalListener = function(key, listener) {
-				if(arguments.length < 2) { return; }
-				if(isInvalidKey(key)) { return; }
+				if(arguments.length < 2) { throw 'Invalid number of arguments'; }
+				if(isInvalidKey(key)) { throw 'Invalid key'; }
 				var name = getKey(key);
 				buildHierarchicalStructure(registeredListeners, name.split(':'), listener);
 				return function() {
@@ -81,23 +82,21 @@ angular
 			};
 
 			var removeRegisteredListener = function(key) {
-				if(isInvalidKey(key)) { return; }
-				var name = getKey(key);
+				if(isInvalidKey(key)) { throw 'Invalid key'; }
 				if(isEmptyObject(registeredListeners)) { return; }
-				unRegisterListener(registeredListeners, name.split(':'))
+				unRegisterListener(registeredListeners, getKey(key).split(':'))
 			};
 
 			var execListeners = function(key, params) {
-				if(isInvalidKey(key)) { return; }
-				var name = getKey(key);
+				if(isInvalidKey(key)) { throw 'Invalid key'; }
 				if(isEmptyObject(registeredListeners)) { return; }
-				findNodeListenersToExecute(registeredListeners, name.split(':'), params, $exceptionHandler);
+				findNodeListenersToExecute(registeredListeners, getKey(key).split(':'), params, $exceptionHandler);
 			};
 
 			var execGroupListeners = function(keys, params) {
 				if(isEmptyObject(registeredListeners)) { return; }
-				if(!Array.isArray(keys) || !Array.isArray(params)) { return; }
-				if(Array.isArray(keys) && keys.some(function(key) { return typeof key !== 'string'; })) { return; }
+				if(!Array.isArray(keys) || !Array.isArray(params)) { throw 'Invalid argument types'; }
+				if(Array.isArray(keys) && areNotAllStrings(keys)) { throw 'All keys must be strings'; }
 				for(var i=0; i < keys.length; i++) {
 					findNodeListenersToExecute(registeredListeners, keys[i].split(':'), params[i] || params[0], $exceptionHandler);
 				}
