@@ -28,6 +28,22 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.exec('foo', 0);
 	}));
 
+	it('should be able to register a function as key', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on(function() {
+			return 'foo';
+		}, function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.exec('foo', 0);
+	}));
+
+	it('should be able to pass arguments to methods', inject(function(angularCommunicatorService) {
+		angularCommunicatorService.on('foo', function(counter) {
+			expect(counter).toBe(0);
+		});
+		angularCommunicatorService.exec('foo', 0);
+	}));
+
 	it('should be able to call methods without passing arguments', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo', fooForSpy.print);
 		angularCommunicatorService.exec('foo');
@@ -37,9 +53,13 @@ describe('Angular Communicator', function() {
 
 	it('should not call methods without a name', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo', fooForSpy.print);
-		angularCommunicatorService.exec();
-		angularCommunicatorService.exec('');
-		angularCommunicatorService.exec(0);
+		try {
+			angularCommunicatorService.exec();
+			angularCommunicatorService.exec('');
+			angularCommunicatorService.exec(0);
+		} catch(e) {
+			expect(e).not.toBeNull();
+		}
 
 		expect(fooForSpy.print).not.toHaveBeenCalled();
 	}));
@@ -74,19 +94,25 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.execQueue(['foo:bar', 'foo:foo'], [0]);
 	}));
 
-	it('should not call multiples functions using same argument', inject(function(angularCommunicatorService) {
+	it('should not call multiples functions using same argument or not an array of keys', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo:print', fooForSpy.print);
 		angularCommunicatorService.on('foo:save', fooForSpy.save);
 
-		angularCommunicatorService.execQueue('foo:print', [0]);
-		angularCommunicatorService.execQueue('foo:save', 'save');
+		try {
+			angularCommunicatorService.execQueue('foo:print', [0]);
+			angularCommunicatorService.execQueue('foo:save', 'save');
+		} catch(e) {
+			expect(e).not.toBeNull();
+		}
 
 		expect(fooForSpy.print).not.toHaveBeenCalled();
 		expect(fooForSpy.save).not.toHaveBeenCalled();
 	}));
 
 	it('should call multiples functions using wrong length of arguments', inject(function(angularCommunicatorService) {
-		angularCommunicatorService.on('foo:print', function(counter) {
+		angularCommunicatorService.on(function() {
+			return 'foo:print';
+		}, function(counter) {
 			expect(counter).toBe(0);
 		});
 		angularCommunicatorService.on('foo:save', function(counter) {
