@@ -1,10 +1,6 @@
 /**
  * An Angular module that gives you a way to share messages among modules
-<<<<<<< HEAD
- * @version v0.4.1 - 2016-04-28
-=======
- * @version v0.5.0 - 2016-04-28
->>>>>>> 0.5.0-dev
+ * @version v0.5.0 - 2016-08-19
  * @link https://github.com/alanschlindvein/angular-communicator
  * @author alanschlindvein <alansaraujo.schlindvein@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -105,7 +101,7 @@ angular
 				findNodeListenersToExecute(registeredListeners, getKey(key).split(':'), params, $exceptionHandler);
 			};
 
-			var execGroupListeners = function(keys, params) {
+			var execGroupedListeners = function(keys, params) {
 				if(isEmptyObject(registeredListeners)) { return; }
 				if(!Array.isArray(keys) || !Array.isArray(params)) { throw 'Invalid argument types'; }
 				if(Array.isArray(keys) && areNotAllStrings(keys)) { throw 'All keys must be strings'; }
@@ -122,7 +118,7 @@ angular
 				on: registerHierarchicalListener,
 				remove: removeRegisteredListener,
 				exec: execListeners,
-				execQueue: execGroupListeners,
+				execQueue: execGroupedListeners,
 				clearAll: clearAllListeners
 			};
 		}];
