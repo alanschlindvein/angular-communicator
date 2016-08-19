@@ -93,7 +93,7 @@ angular
 				findNodeListenersToExecute(registeredListeners, getKey(key).split(':'), params, $exceptionHandler);
 			};
 
-			var execGroupListeners = function(keys, params) {
+			var execGroupedListeners = function(keys, params) {
 				if(isEmptyObject(registeredListeners)) { return; }
 				if(!Array.isArray(keys) || !Array.isArray(params)) { throw 'Invalid argument types'; }
 				if(Array.isArray(keys) && areNotAllStrings(keys)) { throw 'All keys must be strings'; }
@@ -110,7 +110,7 @@ angular
 				on: registerHierarchicalListener,
 				remove: removeRegisteredListener,
 				exec: execListeners,
-				execQueue: execGroupListeners,
+				execQueue: execGroupedListeners,
 				clearAll: clearAllListeners
 			};
 		}];
