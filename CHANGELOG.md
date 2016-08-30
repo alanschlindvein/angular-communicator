@@ -1,3 +1,9 @@
+<a name="0.6.0"></a>
+# 0.6.0 Cronus (2016-08-30)
+#### Changes
+
+* **Unified exec and execQueue.
+
 <a name="0.5.0"></a>
 # 0.5.0 Ceto (2016-04-04)
 #### Changes

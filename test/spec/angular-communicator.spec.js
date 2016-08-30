@@ -28,15 +28,6 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.exec('foo', 0);
 	}));
 
-	it('should be able to register a function as key', inject(function(angularCommunicatorService) {
-		angularCommunicatorService.on(function() {
-			return 'foo';
-		}, function(counter) {
-			expect(counter).toBe(0);
-		});
-		angularCommunicatorService.exec('foo', 0);
-	}));
-
 	it('should be able to pass arguments to methods', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo', function(counter) {
 			expect(counter).toBe(0);
@@ -81,7 +72,7 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.on('foo:foo', function(counter) {
 			expect(counter).toBe(1);
 		});
-		angularCommunicatorService.execQueue(['foo:bar', 'foo:foo'], [0, 1]);
+		angularCommunicatorService.exec(['foo:bar', 'foo:foo'], [0, 1]);
 	}));
 
 	it('should call multiples functions using same argument', inject(function(angularCommunicatorService) {
@@ -91,28 +82,26 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.on('foo:foo', function(counter) {
 			expect(counter).toBe(0);
 		});
-		angularCommunicatorService.execQueue(['foo:bar', 'foo:foo'], [0]);
+		angularCommunicatorService.exec(['foo:bar', 'foo:foo'], 0);
 	}));
 
-	it('should not call multiples functions using same argument or not an array of keys', inject(function(angularCommunicatorService) {
+	it('should call multiples functions using same argument or not an array of keys', inject(function(angularCommunicatorService) {
 		angularCommunicatorService.on('foo:print', fooForSpy.print);
 		angularCommunicatorService.on('foo:save', fooForSpy.save);
 
 		try {
-			angularCommunicatorService.execQueue('foo:print', [0]);
-			angularCommunicatorService.execQueue('foo:save', 'save');
+			angularCommunicatorService.exec('foo:print', [0]);
+			angularCommunicatorService.exec('foo:save', 'save');
 		} catch(e) {
 			expect(e).not.toBeNull();
 		}
 
-		expect(fooForSpy.print).not.toHaveBeenCalled();
-		expect(fooForSpy.save).not.toHaveBeenCalled();
+		expect(fooForSpy.print).toHaveBeenCalled();
+		expect(fooForSpy.save).toHaveBeenCalled();
 	}));
 
 	it('should call multiples functions using wrong length of arguments', inject(function(angularCommunicatorService) {
-		angularCommunicatorService.on(function() {
-			return 'foo:print';
-		}, function(counter) {
+		angularCommunicatorService.on('foo:print', function(counter) {
 			expect(counter).toBe(0);
 		});
 		angularCommunicatorService.on('foo:save', function(counter) {
@@ -122,7 +111,7 @@ describe('Angular Communicator', function() {
 			expect(counter).toBe(0);
 		});
 
-		angularCommunicatorService.execQueue(['foo:print', 'foo:save', 'foo:update'], [0, 2]);
+		angularCommunicatorService.exec(['foo:print', 'foo:save', 'foo:update'], [0, 2]);
 	}));
 
 	it('should un-register listeners', inject(function(angularCommunicatorService) {
@@ -189,7 +178,7 @@ describe('Angular Communicator', function() {
 		angularCommunicatorService.on('foo:print', fooForSpy.print);
 		angularCommunicatorService.on('foo:save', fooForSpy.save);
 
-		angularCommunicatorService.clearAll();
+		angularCommunicatorService.clear();
 
 		angularCommunicatorService.exec('foo:print');
 		angularCommunicatorService.exec('foo:save');

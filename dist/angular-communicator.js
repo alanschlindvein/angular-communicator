@@ -1,125 +1,127 @@
 /**
  * An Angular module that gives you a way to share messages among modules
- * @version v0.5.0 - 2016-08-19
+ * @version v0.6.0 - 2016-08-30
  * @link https://github.com/alanschlindvein/angular-communicator
  * @author alanschlindvein <alansaraujo.schlindvein@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 (function (window, angular) {
 angular
-	.module('AngularCommunicator', [])
-	.provider('angularCommunicatorService', function() {
+  .module('AngularCommunicator', [])
+  .provider('angularCommunicatorService', function() {
 
-		var registeredListeners = {};
+    var registeredListeners = {};
 
-		function buildHierarchicalStructure(reg, splitName, callback) {
-			(!reg[splitName[0]]) && (reg[splitName[0]] = { listeners: [] });
-			if(splitName.length === 1) {
-				reg[splitName[0]].listeners.push(callback);
-				return;
-			}
-			var registered = reg[splitName[0]];
-			splitName.splice(0, 1);
-			buildHierarchicalStructure(registered, splitName, callback);
-		}
+    function buildHierarchicalStructure(reg, splitName, callback) {
+      (!reg[splitName[0]]) && (reg[splitName[0]] = {listeners: []});
+      if(splitName.length === 1) {
+        reg[splitName[0]].listeners.push(callback);
+        return;
+      }
+      var registered = reg[splitName[0]];
+      splitName.splice(0, 1);
+      buildHierarchicalStructure(registered, splitName, callback);
+    }
 
-		function unRegisterListener(reg, splitName) {
-			if(splitName.length === 1) {
-				reg[splitName[0]] = { listeners: [] };
-				return;
-			}
-			var registered = reg[splitName[0]];
-			splitName.splice(0, 1);
-			unRegisterListener(registered, splitName);
-		}
+    function unRegisterListener(reg, splitName) {
+      if(splitName.length === 1) {
+        reg[splitName[0]] = {listeners: []};
+        return;
+      }
+      var registered = reg[splitName[0]];
+      splitName.splice(0, 1);
+      unRegisterListener(registered, splitName);
+    }
 
-		function findNodeListenersToExecute(reg, splitName, params, $exceptionHandler) {
-			if(splitName.length === 1) {
-				execNodeListeners(reg[splitName[0]], params, $exceptionHandler);
-				return;
-			}
-			var registered = reg[splitName[0]];
-			splitName.splice(0, 1);
-			findNodeListenersToExecute(registered, splitName, params);
-		}
+    function findNodeListenersToExecute(reg, splitName, params, $exceptionHandler) {
+      if(splitName.length === 1) {
+        execNodeListeners(reg[splitName[0]], params, $exceptionHandler);
+        return;
+      }
+      var registered = reg[splitName[0]];
+      splitName.splice(0, 1);
+      findNodeListenersToExecute(registered, splitName, params);
+    }
 
-		function execNodeListeners(reg, params, $exceptionHandler) {
-			for(var i=0; i < reg.listeners.length; i++) {
-				try {
-					reg.listeners[i](params);
-				} catch(e) {
-					$exceptionHandler(e);
-				}
-			}
-			var children = Object.keys(reg).filter(function(elem) {
-				return elem !== 'listeners';
-			});
-			for(var child = 0; child < children.length; child++) {
-				execNodeListeners(reg[children[child]], params, $exceptionHandler);
-			}
-		}
+    function execNodeListeners(reg, params, $exceptionHandler) {
+      for(var i = 0; i < reg.listeners.length; i++) {
+        try {
+          reg.listeners[i](params);
+        } catch(e) {
+          $exceptionHandler(e);
+        }
+      }
+      var children = Object.keys(reg).filter(function(elem) {
+        return elem !== 'listeners';
+      });
+      for(var child = 0; child < children.length; child++) {
+        execNodeListeners(reg[children[child]], params, $exceptionHandler);
+      }
+    }
 
-		function isEmptyObject(obj) {
-			return Object.keys(obj).length === 0 && JSON.stringify(obj) === JSON.stringify({});
-		}
+    function isEmptyObject(obj) {
+      return Object.keys(obj).length === 0 && JSON.stringify(obj) === JSON.stringify({});
+    }
 
-		function getKey(key) {
-			return typeof key === 'function' ? key() : key;
-		}
+    function isInvalidKey(key) {
+      return typeof key !== 'string';
+    }
 
-		function isInvalidKey(key) {
-			return (!key || ['function', 'string'].indexOf(typeof key) === -1);
-		}
+    this.$get = ['$exceptionHandler', function($exceptionHandler) {
 
-		function areNotAllStrings(keys) {
-			return keys.some(function(key) {
-				return typeof key !== 'string';
-			});
-		}
+      var registerHierarchicalListener = function(key, listener) {
+        if(arguments.length < 2) {
+          throw 'Invalid number of arguments';
+        }
+        if(isInvalidKey(key)) {
+          throw 'Invalid key';
+        }
+        buildHierarchicalStructure(registeredListeners, key.split(':'), listener);
+        return function() {
+          unRegisterListener(registeredListeners, key.split(':'));
+        }
+      };
 
-		this.$get = ['$exceptionHandler', function($exceptionHandler) {
+      var removeRegisteredListener = function(key) {
+        if(isInvalidKey(key)) {
+          throw 'Invalid key';
+        }
+        if(isEmptyObject(registeredListeners)) {
+          return;
+        }
+        unRegisterListener(registeredListeners, key.split(':'))
+      };
 
-			var registerHierarchicalListener = function(key, listener) {
-				if(arguments.length < 2) { throw 'Invalid number of arguments'; }
-				if(isInvalidKey(key)) { throw 'Invalid key'; }
-				var name = getKey(key);
-				buildHierarchicalStructure(registeredListeners, name.split(':'), listener);
-				return function() {
-					unRegisterListener(registeredListeners, name.split(':'));
-				}
-			};
+      var execGroupedListeners = function(keys, params) {
+        if(Array.isArray(keys)) {
+          if(isEmptyObject(registeredListeners)) {
+            return;
+          }
+          var args = Array.isArray(params) ? params : [params];
+          for(var i = 0; i < keys.length; i++) {
+            findNodeListenersToExecute(registeredListeners, keys[i].split(':'), args[i] || args[0], $exceptionHandler);
+          }
+          return;
+        }
+        if(isInvalidKey(keys)) {
+          throw 'Invalid key';
+        }
+        if(isEmptyObject(registeredListeners)) {
+          return;
+        }
+        findNodeListenersToExecute(registeredListeners, keys.split(':'), params, $exceptionHandler);
+      };
 
-			var removeRegisteredListener = function(key) {
-				if(isInvalidKey(key)) { throw 'Invalid key'; }
-				if(isEmptyObject(registeredListeners)) { return; }
-				unRegisterListener(registeredListeners, getKey(key).split(':'))
-			};
+      var clearListeners = function() {
+        registeredListeners = {};
+      };
 
-			var execListeners = function(key, params) {
-				if(isInvalidKey(key)) { throw 'Invalid key'; }
-				if(isEmptyObject(registeredListeners)) { return; }
-				findNodeListenersToExecute(registeredListeners, getKey(key).split(':'), params, $exceptionHandler);
-			};
-
-			var execGroupedListeners = function(keys, params) {
-				if(isEmptyObject(registeredListeners)) { return; }
-				if(!Array.isArray(keys) || !Array.isArray(params)) { throw 'Invalid argument types'; }
-				if(Array.isArray(keys) && areNotAllStrings(keys)) { throw 'All keys must be strings'; }
-				for(var i=0; i < keys.length; i++) {
-					findNodeListenersToExecute(registeredListeners, keys[i].split(':'), params[i] || params[0], $exceptionHandler);
-				}
-			};
-
-			var clearAllListeners = function() {
-				registeredListeners = {};
-			};
-
-			return {
-				on: registerHierarchicalListener,
-				remove: removeRegisteredListener,
-				exec: execListeners,
-				execQueue: execGroupedListeners,
-				clearAll: clearAllListeners
-			};
-		}];
-	});})(window, window.angular);
+      return {
+        on: registerHierarchicalListener,
+        remove: removeRegisteredListener,
+        exec: execGroupedListeners,
+        clear: clearListeners
+      };
+    }];
+  });
+})(window, window.angular);

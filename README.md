@@ -13,9 +13,8 @@ Just as you would do with $on, $emit and $broadcast using [AngularJS](https://do
 - [API Documentation](#api-documentation)
  - [on](#on)
  - [exec](#exec)
- - [execQueue](#execqueue)
  - [remove](#remove)
- - [clearAll](#clearall)
+ - [clear](#clear)
 
 ## Get Sarted
 **(1)** You can install angular-communicator using 3 different ways:<br/>
@@ -117,20 +116,29 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-### execQueue
-Execute multiple listeners at once.
+
+##### Execute multiple listeners at once.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularCommunicatorService.execQueue(['update', 'save', 'bar:save'], [{update: true}]);
+  angularCommunicatorService.exec(['update', 'save', 'bar:save'], {update: true});
   //...
 });
 ```
 Pass an argument to each listener with an array of arguments.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
+  angularCommunicatorService.on('update', function(obj) {
+     //obj -> {update: true}
+  });
+  angularCommunicatorService.on('save', function(obj) {
+     //obj -> {save: false}
+  });
+  angularCommunicatorService.on('bar:save', function(obj) {
+     //obj -> {name: 'bar.save'}
+  });
   //...
-  angularCommunicatorService.execQueue(['update', 'save', 'bar:save'], [{update: true}, {update: false}, {name: 'bar.save'}]);
+  angularCommunicatorService.exec(['update', 'save', 'bar:save'], [{update: true}, {save: false}, {name: 'bar.save'}]);
   //...
 });
 ```
@@ -147,7 +155,7 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
      //obj -> {update: true}
   });
   //...
-  angularCommunicatorService.execQueue(['update', 'save', 'bar:save'], [{update: true}, {save: false}]);
+  angularCommunicatorService.exec(['update', 'save', 'bar:save'], [{update: true}, {save: false}]);
   //...
 });
 ```
@@ -160,12 +168,12 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
-### clearAll
+### clear
 Remove all listeners from communicator.
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
-  angularCommunicatorService.clearAll();
+  angularCommunicatorService.clear();
   //...
 });
 ```
