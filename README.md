@@ -1,6 +1,7 @@
 angular-communicator
 =====================
-An Angular module that gives you a way to share messages among modules.
+
+An Angular module that gives you a way to share messages.
 
 [![NPM version][npm-image]][npm-url]
 [![License][license-image]][license-url]
@@ -8,26 +9,32 @@ An Angular module that gives you a way to share messages among modules.
 
 Just as you would do with $on, $emit and $broadcast using [AngularJS](https://docs.angularjs.org/api/ng/type/$rootScope.Scope), you can easily register your listeners and execute them with this simple service. Angular Communicator brings you an awesome feature that allows you define your listeners as a tree and execute them as you wish, nice and easy.
 
-## Table of contents:
+## Table of contents
+
 - [Get Sarted](#getstarted)
 - [API Documentation](#api-documentation)
- - [on](#on)
- - [exec](#exec)
- - [remove](#remove)
- - [clear](#clear)
+- [on](#on)
+- [exec](#exec)
+- [remove](#remove)
+- [clear](#clear)
 
 ## Get Sarted
+
 **(1)** You can install angular-communicator using 3 different ways:<br/>
 **Git:**
 clone & build [this](https://github.com/alanschlindvein/angular-communicator.git) repository<br/>
 **Bower:**
+
 ```bash
-$ bower install angular-communicator --save
+bower install angular-communicator --save
 ```
+
 **npm:**
+
 ```bash
-$ npm install angular-communicator
+npm install angular-communicator
 ```
+
 **(2)** Include `angular-communicator.js` (or `angular-communicator.min.js`) from the [dist](https://github.com/alanschlindvein/angular-communicator/tree/master/dist) directory in your `index.html`, after including Angular itself.
 
 **(3)** Add `'AngularCommunicator'` to your main module's list of dependencies.
@@ -53,9 +60,13 @@ When you're done, your setup should look similar to the following:
 </body>
 </html>
 ```
+
 ## API Documentation
+
 ## on
-Register a listener with its callback function.  
+
+Register a listener with its callback function.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -65,7 +76,9 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
 You can build a tree of listeners adding ':' to specify the hierarchy.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -82,7 +95,9 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   });
 });
 ```
+
 **On** returns a clear function to control when the listener needs to be removed.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -94,8 +109,11 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
 ### exec
+
 Execute all registered listeners.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -103,7 +121,9 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
 You can execute the listeners of a level just telling the parent level name.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -117,7 +137,8 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
 });
 ```
 
-##### Execute multiple listeners at once.
+##### Execute multiple listeners at once
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -125,7 +146,9 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
 Pass an argument to each listener with an array of arguments.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   angularCommunicatorService.on('update', function(obj) {
@@ -142,7 +165,9 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
 By default the first argument is passed to the listener whether it doesn't have an correspondent argument.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   angularCommunicatorService.on('update', function(obj) {
@@ -159,8 +184,11 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
 ### remove
+
 Remove an listener from communicator.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
@@ -168,8 +196,11 @@ myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
 });
 ```
+
 ### clear
+
 Remove all listeners from communicator.
+
 ```js
 myApp.controller('MainCtrl', function($scope, angularCommunicatorService) {
   //...
